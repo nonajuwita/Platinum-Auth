@@ -1,6 +1,6 @@
-import logo from './logo.svg';
+
 import './App.css';
-import ReactDOM from "react-dom/client";
+
 import {
   BrowserRouter,
   Routes,
@@ -11,45 +11,44 @@ import Register from "./Pages/Register";
 import Login from './Pages/Login';
 import Dasboard from './Pages/Dasboard'
 import ProtectedRoute from './HOC';
+import Detail from './Detail';
 import { useEffect, useState } from 'react';
+import AuthContextProvider from './context/AuthContext';
 
 
 function App() {
-const [isLogin, setIsLogin]= useState()
-
-  useEffect(() => {
-    const checkIfLogin = () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setIsLogin(false);
-      } else {
-        setIsLogin(true);
-      }
-    };
-    checkIfLogin();
-   
-  }, []);
 
 
   return (
+    <AuthContextProvider>
    <Routes>
         
         <Route path="/" element={<Home />}/>
         <Route path='register' element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path='/dasboard' element={<Dasboard/>}/>
-        {/* <Route
+        <Route path="/login" element={<Login/>} />
+        
+        <Route
         path='/dasboard'
         element={
-        <ProtectedRoute isLogin={Login}>
-
+        <ProtectedRoute>
+          
         <Dasboard/>
-        </ProtectedRoute> */}
+        </ProtectedRoute>
         
         }
         />
+        <Route
+        path="/detail/:id"
+        element={
+
+          <ProtectedRoute>
+            <Detail />
+          </ProtectedRoute>
+        }
+      />
         
    </Routes>
+   </AuthContextProvider>
         
           
  

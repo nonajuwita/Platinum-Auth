@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useCallback, useContext } from "react";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
-const Login = (setIsLogin) => {
+
+const Login = ({}) => {
+  const authContextData = useContext(AuthContext)
+  const {setIsLogin} = authContextData
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [res, setRes] = useState("");
@@ -34,6 +40,7 @@ const Login = (setIsLogin) => {
         localStorage.setItem('token',res.data.token)
        
         navigate("/dasboard")
+        setIsLogin(true);
         
      
 
@@ -45,6 +52,20 @@ const Login = (setIsLogin) => {
   };
 
   console.log(res)
+
+  const redirect = useCallback(
+    () => navigate("/dasboard", { replace: true }),
+    [navigate]
+  );
+
+  useEffect(() => {
+    const checkIfLogin = () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      redirect();
+    };
+    checkIfLogin();
+  }, [redirect]);
  
 
   return (
